@@ -1,0 +1,4 @@
+"24C02.obj",
+"main.obj" 
+TO "Test" 
+RAMSIZE(256) 

@@ -1,0 +1,8 @@
+".\out\main.obj",
+".\out\DS1302.obj",
+".\out\LCD1602.obj",
+".\out\key.obj",
+".\out\RS232.obj",
+".\out\IR.obj" 
+TO ".\out\综合时钟" 
+PRINT(".\list\综合时钟.m51") RAMSIZE(256) 

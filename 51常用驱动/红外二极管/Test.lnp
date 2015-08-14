@@ -1,0 +1,4 @@
+"IR_Send.obj",
+"main.obj" 
+TO "Test" 
+RAMSIZE(256) 

@@ -1,0 +1,4 @@
+"l298.obj",
+"main.obj" 
+TO "Test" 
+RAMSIZE(256) 

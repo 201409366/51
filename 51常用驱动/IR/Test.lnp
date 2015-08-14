@@ -1,0 +1,5 @@
+"IR.obj",
+"main.obj",
+"uart.obj" 
+TO "Test" 
+RAMSIZE(256) 

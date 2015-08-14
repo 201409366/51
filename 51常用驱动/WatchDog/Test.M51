@@ -1,0 +1,172 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        08/30/2013  12:49:20  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL\C51\BIN\BL51.EXE main.obj, WatchDog.obj, Power.obj TO Test RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  main.obj (MAIN)
+  WatchDog.obj (WATCHDOG)
+  Power.obj (POWER)
+  D:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  Test (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0019H     UNIT         ?PR?MAIN?MAIN
+            CODE    001CH     000CH     UNIT         ?C_C51STARTUP
+            CODE    0028H     000AH     UNIT         ?PR?ENTERPOWERDOWN?POWER
+            CODE    0032H     0006H     UNIT         ?PR?GETRESETMODE?POWER
+            CODE    0038H     0004H     UNIT         ?PR?LAUNCHDOG?WATCHDOG
+            CODE    003CH     0004H     UNIT         ?PR?FEEDDOG?WATCHDOG
+            CODE    0040H     0004H     UNIT         ?PR?EXITPOWERDOWN?POWER
+            CODE    0044H     0004H     UNIT         ?PR?CLEARRESET?POWER
+
+
+
+OVERLAY MAP OF MODULE:   Test (MAIN)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN
+  +--> ?PR?LAUNCHDOG?WATCHDOG
+  +--> ?PR?GETRESETMODE?POWER
+  +--> ?PR?CLEARRESET?POWER
+
+
+
+SYMBOL TABLE OF MODULE:  Test (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/30/2013  12:49:20  PAGE 2
+
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  C:0003H         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          MAIN
+  C:0003H         LINE#         5
+  C:0003H         LINE#         6
+  C:0003H         LINE#         7
+  C:0006H         LINE#         8
+  C:0009H         LINE#         9
+  C:000FH         LINE#         10
+  C:0012H         LINE#         11
+  C:0015H         LINE#         12
+  C:0017H         LINE#         13
+  C:001AH         LINE#         14
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        WATCHDOG
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  C:0038H         PUBLIC        launchDog
+  C:003CH         PUBLIC        feedDog
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  D:00E1H         PUBLIC        WDT_CONTR
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          LAUNCHDOG
+  C:0038H         LINE#         5
+  C:0038H         LINE#         6
+  C:003BH         LINE#         14
+  -------         ENDPROC       LAUNCHDOG
+  -------         PROC          FEEDDOG
+  C:003CH         LINE#         15
+  C:003CH         LINE#         16
+  C:003FH         LINE#         17
+  -------         ENDPROC       FEEDDOG
+  -------         ENDMOD        WATCHDOG
+
+  -------         MODULE        POWER
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  B:00A8H.7       PUBLIC        EA
+  D:00A8H         PUBLIC        IE
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/30/2013  12:49:20  PAGE 3
+
+
+  C:0044H         PUBLIC        clearReset
+  D:00B8H         PUBLIC        IP
+  D:0087H         PUBLIC        PCON
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  C:0028H         PUBLIC        enterPowerDown
+  B:0088H.0       PUBLIC        IT0
+  B:00A8H.2       PUBLIC        EX1
+  C:0032H         PUBLIC        getResetMode
+  D:00C8H         PUBLIC        T2CON
+  C:0040H         PUBLIC        exitPowerDown
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          GETRESETMODE
+  C:0032H         LINE#         6
+  C:0032H         LINE#         7
+  C:0037H         LINE#         8
+  -------         ENDPROC       GETRESETMODE
+  -------         PROC          ENTERPOWERDOWN
+  C:0028H         LINE#         10
+  C:0028H         LINE#         11
+  C:002AH         LINE#         12
+  C:002CH         LINE#         13
+  C:002EH         LINE#         14
+  C:0031H         LINE#         15
+  -------         ENDPROC       ENTERPOWERDOWN
+  -------         PROC          EXITPOWERDOWN
+  C:0040H         LINE#         17
+  C:0040H         LINE#         18
+  C:0043H         LINE#         19
+  -------         ENDPROC       EXITPOWERDOWN
+  -------         PROC          CLEARRESET
+  C:0044H         LINE#         21
+  C:0044H         LINE#         22
+  C:0047H         LINE#         23
+  -------         ENDPROC       CLEARRESET
+  -------         ENDMOD        POWER
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?FEEDDOG?WATCHDOG
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENTERPOWERDOWN?POWER
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?EXITPOWERDOWN?POWER
+
+Program Size: data=9.0 xdata=0 code=72
+LINK/LOCATE RUN COMPLETE.  3 WARNING(S),  0 ERROR(S)

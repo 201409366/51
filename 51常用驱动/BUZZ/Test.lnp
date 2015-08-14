@@ -1,0 +1,4 @@
+"BUZZ.obj",
+"main.obj" 
+TO "Test" 
+RAMSIZE(256) 

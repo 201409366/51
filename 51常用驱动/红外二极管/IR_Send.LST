@@ -1,0 +1,90 @@
+C51 COMPILER V9.01   IR_SEND                                                               08/30/2013 12:54:14 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE IR_SEND
+OBJECT MODULE PLACED IN IR_Send.OBJ
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE IR_Send.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <intrins.h>
+   2          #include "IR_Send.h"
+   3          
+   4          sbit IR_LED=P1^4;
+   5          
+   6          void Send_UPD6121(unsigned char syscode,unsigned char keydat);
+   7          
+   8          void sendCode(unsigned char syscode,unsigned char keydat){
+   9   1              Send_UPD6121(syscode,keydat);
+  10   1      }
+  11          
+  12          //=======================================
+  13          void IrSendLow(int time)
+  14          {
+  15   1         unsigned char h;
+  16   1       
+  17   1        for(;time>0;time-=26) //对38K载波，26us为一个周期，
+  18   1          {
+  19   2           IR_LED=0;
+  20   2           h=2;
+  21   2               _nop_();
+  22   2           while(--h!=0) ;
+  23   2           
+  24   2           IR_LED=1;
+  25   2          }   
+  26   1      }
+  27          //=======================================
+  28          void IrSendHigh(int time)
+  29          {
+  30   1        unsigned char h;
+  31   1        for(;time>0;time-=26)  //对38K载波，26us为一个周期，
+  32   1          {
+  33   2           IR_LED=1;
+  34   2           h=2;
+  35   2               _nop_();
+  36   2           while(--h!=0) ;
+  37   2           
+  38   2           IR_LED=1;
+  39   2           
+  40   2          }   
+  41   1      }
+  42          //=======================================
+  43          void IrSendByte6121(unsigned char n)
+  44          {
+  45   1       char i;
+  46   1       
+  47   1       for(i=8;i!=0;i--)
+  48   1        {
+  49   2          IrSendLow(560);             //560us
+  50   2          if(n&1) IrSendHigh(560*3-70);    //1: 560*3us
+  51   2          else IrSendHigh(560-52);            //0: 560us
+  52   2              n>>=1;
+  53   2        }
+  54   1      }
+  55          //=======================================
+C51 COMPILER V9.01   IR_SEND                                                               08/30/2013 12:54:14 PAGE 2   
+
+  56          void Send_UPD6121(unsigned char syscode,unsigned char keydat)
+  57          {
+  58   1        IrSendLow(9000-30);           //引导脉冲低电平9ms
+  59   1        IrSendHigh(4500-90);          //引导脉冲高电平4.5ms
+  60   1        IrSendByte6121(syscode);              //发一个字节的用户码
+  61   1        IrSendByte6121(~syscode);             //发一个字节的用户码的反码
+  62   1        IrSendByte6121(keydat);               //发一个字节的功能码
+  63   1        IrSendByte6121(~keydat);              //发一个字节的功能码的反码
+  64   1        IrSendLow(560);                       //发560us尾码
+  65   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    147    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

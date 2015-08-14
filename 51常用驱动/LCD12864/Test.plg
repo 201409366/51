@@ -1,0 +1,20 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+F:\大学\电路\51程序\51常用驱动\LCD12864\Test.uvproj
+Project File Date:  08/30/2013
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling LCD12864.c...
+LCD12864.C(14): error C129: missing ';' before 'lcd12864'
+compiling main.c...
+Target not created
+Build target 'Target 1'
+compiling LCD12864.c...
+compiling main.c...
+linking...
+Program Size: data=10.0 xdata=0 code=176
+"Test" - 0 Error(s), 0 Warning(s).

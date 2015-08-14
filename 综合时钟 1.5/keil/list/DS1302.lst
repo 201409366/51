@@ -1,0 +1,150 @@
+C51 COMPILER V9.52.0.0   DS1302                                                            12/29/2014 17:21:25 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN .\out\DS1302.obj
+COMPILER INVOKED BY: D:\Keil\C51\BIN\C51.EXE ..\user\DS1302\DS1302.c BROWSE DEBUG OBJECTEXTEND PRINT(.\list\DS1302.lst) 
+                    -TABS(2) OBJECT(.\out\DS1302.obj)
+
+line level    source
+
+   1          #include "ds1302.h"
+   2          
+   3          #define uchar unsigned char
+   4          #define uint unsigned int
+   5          
+   6          sbit DS1302_SCLK = P2^2;
+   7          sbit DS1302_IO = P2^1;
+   8          sbit DS1302_RST = P2^0;
+   9          
+  10          static void write1Byte(uchar address);
+  11          static uchar readDS1302();
+  12          static void wirteData(uchar address, uchar value);
+  13          static uchar readData(uchar address);
+  14          
+  15          void init_ds1302(); 
+  16          void setTime (unsigned char *time);  //设置时间的时候 记得转码
+  17          void getTime (unsigned char *time);
+  18          
+  19          DS1302 ds1302 = {
+  20            setTime,
+  21            getTime,
+  22            init_ds1302
+  23          };
+  24          
+  25          static void write1Byte(uchar address) {
+  26   1        unsigned int i;
+  27   1        for(i=8; i>0; i--){
+  28   2          DS1302_IO = address&0x01;////取address的最低位
+  29   2          DS1302_SCLK = 1;
+  30   2          DS1302_SCLK= 0;
+  31   2          address >>= 1; //相当于汇编中的 RRC
+  32   2        }
+  33   1      }
+  34          
+  35          static uchar readDS1302() {
+  36   1        unsigned char i;
+  37   1        unsigned char da = 0;
+  38   1      
+  39   1        for(i = 0; i < 8; i++) { //读数据
+  40   2          DS1302_SCLK = 0;  //一拉低就能读取数据了
+  41   2          if(DS1302_IO) //读走数据
+  42   2            da |=  0x01 << i;
+  43   2          DS1302_SCLK = 1;
+  44   2        }
+  45   1        return (da);
+  46   1      }
+  47          
+  48          static void wirteData(uchar address, uchar value) {
+  49   1        DS1302_RST = 0;
+  50   1        DS1302_SCLK = 0;
+  51   1        DS1302_RST = 1;
+  52   1        write1Byte(address); // 地址，命令
+  53   1        write1Byte(value); // 写1Byte数据
+  54   1        DS1302_SCLK = 1;
+C51 COMPILER V9.52.0.0   DS1302                                                            12/29/2014 17:21:25 PAGE 2   
+
+  55   1        DS1302_RST= 0;
+  56   1      }
+  57          
+  58          static uchar readData(uchar address) {
+  59   1        unsigned char data_;
+  60   1        DS1302_RST = 0;
+  61   1        DS1302_SCLK = 0;
+  62   1        DS1302_RST = 1;
+  63   1        write1Byte(address);
+  64   1        data_ = readDS1302();
+  65   1        DS1302_SCLK = 1;
+  66   1        DS1302_RST  = 0;
+  67   1        
+  68   1      //  data_ = data_/16*10 + data_ % 16;
+  69   1      
+  70   1        return (data_);
+  71   1      }
+  72          
+  73          void init_ds1302() {
+  74   1          
+  75   1        if(readData(0x81) == 0x80) {//如果没有初始化就进行初始化 
+  76   2          wirteData(0x8E,0x00);//打开保护，使寄存器可读可写
+  77   2          wirteData(0x84,0x00);//时寄存器全部置零,是计时器变为24小时制
+  78   2          
+  79   2          //写数据 min h date month day year
+  80   2          wirteData(0x82,0x45);
+  81   2          wirteData(0x84,0x08);
+  82   2          wirteData(0x86,0x21);
+  83   2          wirteData(0x88,0x12);
+  84   2          wirteData(0x8a,0x05);
+  85   2          wirteData(0x8c,0x12);//11年 因为这个芯片只有年的后面两位
+  86   2          
+  87   2          wirteData(0x80,0x00); //秒位全部置零,启动时钟
+  88   2          //向DS1302的ram中写一个数，表示DS1302已经被启动了
+  89   2          wirteData(0x8E,0x80);//关闭保护
+  90   2        }
+  91   1        
+  92   1      }
+  93          
+  94          void setTime (unsigned char *time) {//一个字符数组 数据从小到大
+  95   1        //写数据sec min h date month day year
+  96   1        char i,t;
+  97   1        unsigned char address = 0x80;
+  98   1      
+  99   1        wirteData(0x8E,0x00);//打开保护，是寄存器可读可写
+ 100   1      
+ 101   1        for(i = 0; i < 7; i++) {
+ 102   2          t = *time;
+ 103   2          t =  t / 10 * 16 + t % 10; //转码
+ 104   2          wirteData(address,t);
+ 105   2          time ++;
+ 106   2          address += 2;
+ 107   2        }
+ 108   1        wirteData(0x8E,0x80);//关闭保护
+ 109   1      }
+ 110          
+ 111          void getTime (unsigned char *time) {//一个字符数组
+ 112   1        char i;
+ 113   1        unsigned char address = 0x81;
+ 114   1      
+ 115   1        for(i = 0; i < 7; i++) {
+ 116   2          *time = readData(address);//读取的时间为BCD码,这里需要转码
+C51 COMPILER V9.52.0.0   DS1302                                                            12/29/2014 17:21:25 PAGE 3   
+
+ 117   2          *time = *time/16*10 + *time%16;
+ 118   2          time ++;
+ 119   2          address += 2;
+ 120   2        }
+ 121   1      }
+ 122          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    314    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9       7
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

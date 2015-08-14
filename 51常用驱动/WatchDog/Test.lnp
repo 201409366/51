@@ -1,0 +1,5 @@
+"main.obj",
+"WatchDog.obj",
+"Power.obj" 
+TO "Test" 
+RAMSIZE(256) 

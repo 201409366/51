@@ -1,0 +1,105 @@
+C51 COMPILER V9.52.0.0   IR                                                                12/29/2014 17:21:27 PAGE 1   
+
+
+C51 COMPILER V9.52.0.0, COMPILATION OF MODULE IR
+OBJECT MODULE PLACED IN .\out\IR.obj
+COMPILER INVOKED BY: D:\Keil\C51\BIN\C51.EXE ..\user\IR\IR.c BROWSE DEBUG OBJECTEXTEND PRINT(.\list\IR.lst) TABS(2) OBJE
+                    -CT(.\out\IR.obj)
+
+line level    source
+
+   1          #include "ir.h"
+   2          #include "reg52.h"
+   3          
+   4          unsigned char readData [4];
+   5          unsigned char flag = 0;
+   6          
+   7          sbit IR = P3^3;
+   8          
+   9          void initIR();
+  10          
+  11          IR_T ir = {
+  12            &readData[2],
+  13            &flag,
+  14            initIR
+  15          };
+  16           
+  17          void initIR() {
+  18   1        EA = 1;//打开中断总开关
+  19   1        EX1 = 1;//打开外部中断1
+  20   1        IT0 = 0;//当IT0=0时，为电平触发方式(低电平)   
+  21   1      }
+  22          
+  23          void delay_IR(unsigned char x)  {   //x*0.14MS
+  24   1      
+  25   1        unsigned char i;
+  26   1        while(x--) {
+  27   2          for (i = 0; i<13; i++) {}
+  28   2        }
+  29   1      }
+  30          
+  31          
+  32          void IRHandle() interrupt 2 {
+  33   1      /*这个是解析函数，按键的键码被放到了readData[2]里面*/
+  34   1        unsigned char j,k,N=0;
+  35   1      
+  36   1        EX1 = 0; //关闭外部中断1  
+  37   1        delay_IR(15);//延时15*0.14MS=2.1ms
+  38   1      
+  39   1        if (IR==1) { //如果此时IR为高说明什么呢？好像是一开始应该是9ms的低电平
+  40   2          EX1 =1;//信号没有出现，返回。这次是干扰
+  41   2          return;
+  42   2        } 
+  43   1        //确认IR信号出现
+  44   1        while (!IR) { //等IR变为高电平，跳过9ms的前导低电平信号。           
+  45   2          delay_IR(1);//延时0.14ms
+  46   2        }           
+  47   1        
+  48   1        for (j=0;j<4;j++)  {       //收集四组数据  
+  49   2          for (k=0;k<8;k++) {       //每组数据有8位
+  50   3            while (IR) {           //等 IR 变为低电平，跳过4.5ms的前导高电平信号。
+  51   4              delay_IR(1);
+  52   4            }
+  53   3            while (!IR) {         //等 IR 变为高电平
+  54   4              delay_IR(1);
+C51 COMPILER V9.52.0.0   IR                                                                12/29/2014 17:21:27 PAGE 2   
+
+  55   4            }
+  56   3            while (IR) {          //计算IR高电平时长
+  57   4              delay_IR(1);
+  58   4              N++;           
+  59   4              if (N>=30) {//这里会有抖动,所以千万别认为按一次键只解码了一次
+  60   5                EX1=1;
+  61   5                return;
+  62   5              }                  //0.14ms计数过长自动离开。
+  63   4            }                        //高电平计数完毕             
+  64   3            //数据处理       
+  65   3            readData[j]=readData[j] >> 1; //数据移位
+  66   3            if (N>=8) { //8*0.14 = 1.12  如果超过了这个时间，该位为1
+  67   4              readData[j] |= 0x80;
+  68   4            }  
+  69   3            N=0;
+  70   3          }//end for k
+  71   2        }//end for j
+  72   1        
+  73   1        if (readData[2] == ~readData[3]) {   //这里验证是为了保证解码成功
+  74   2          //这里直接做解码后面的逻辑处理
+  75   2          flag = 1;
+  76   2        }
+  77   1      
+  78   1        EX1 = 1; 
+  79   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    186    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

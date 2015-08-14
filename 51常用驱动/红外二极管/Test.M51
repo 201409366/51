@@ -1,0 +1,185 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        08/30/2013  12:54:14  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+D:\KEIL\C51\BIN\BL51.EXE IR_Send.obj, main.obj TO Test RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  IR_Send.obj (IR_SEND)
+  main.obj (MAIN)
+  D:\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  Test (IR_SEND)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            IDATA   0008H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     002FH     UNIT         ?PR?_SEND_UPD6121?IR_SEND
+            CODE    0032H     0023H     UNIT         ?PR?_IRSENDBYTE6121?IR_SEND
+            CODE    0055H     001FH     UNIT         ?PR?_IRSENDLOW?IR_SEND
+            CODE    0074H     001FH     UNIT         ?PR?_IRSENDHIGH?IR_SEND
+            CODE    0093H     000CH     UNIT         ?C_C51STARTUP
+            CODE    009FH     0009H     UNIT         ?PR?MAIN?MAIN
+            CODE    00A8H     0003H     UNIT         ?PR?_SENDCODE?IR_SEND
+
+
+
+OVERLAY MAP OF MODULE:   Test (IR_SEND)
+
+
+SEGMENT
+  +--> CALLED SEGMENT
+---------------------
+?C_C51STARTUP
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN
+  +--> ?PR?_SENDCODE?IR_SEND
+
+?PR?_SENDCODE?IR_SEND
+  +--> ?PR?_SEND_UPD6121?IR_SEND
+
+?PR?_SEND_UPD6121?IR_SEND
+  +--> ?PR?_IRSENDLOW?IR_SEND
+  +--> ?PR?_IRSENDHIGH?IR_SEND
+  +--> ?PR?_IRSENDBYTE6121?IR_SEND
+
+?PR?_IRSENDBYTE6121?IR_SEND
+  +--> ?PR?_IRSENDLOW?IR_SEND
+  +--> ?PR?_IRSENDHIGH?IR_SEND
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/30/2013  12:54:14  PAGE 2
+
+
+
+
+
+SYMBOL TABLE OF MODULE:  Test (IR_SEND)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        IR_SEND
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  C:0003H         PUBLIC        _Send_UPD6121
+  C:00A8H         PUBLIC        _sendCode
+  C:0032H         PUBLIC        _IrSendByte6121
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  C:0074H         PUBLIC        _IrSendHigh
+  B:0090H.4       PUBLIC        IR_LED
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  C:0055H         PUBLIC        _IrSendLow
+  -------         PROC          _SENDCODE
+  D:0007H         SYMBOL        syscode
+  D:0005H         SYMBOL        keydat
+  C:00A8H         LINE#         8
+  C:00A8H         LINE#         9
+  -------         ENDPROC       _SENDCODE
+  -------         PROC          _IRSENDLOW
+  D:0006H         SYMBOL        time
+  -------         DO            
+  D:0005H         SYMBOL        h
+  -------         ENDDO         
+  C:0055H         LINE#         13
+  C:0055H         LINE#         14
+  C:0055H         LINE#         17
+  C:0060H         LINE#         18
+  C:0060H         LINE#         19
+  C:0062H         LINE#         20
+  C:0064H         LINE#         21
+  C:0065H         LINE#         22
+  C:0067H         LINE#         24
+  C:0069H         LINE#         25
+  C:0073H         LINE#         26
+  -------         ENDPROC       _IRSENDLOW
+  -------         PROC          _IRSENDHIGH
+  D:0006H         SYMBOL        time
+  -------         DO            
+  D:0005H         SYMBOL        h
+  -------         ENDDO         
+  C:0074H         LINE#         28
+  C:0074H         LINE#         29
+  C:0074H         LINE#         31
+  C:007FH         LINE#         32
+  C:007FH         LINE#         33
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/30/2013  12:54:14  PAGE 3
+
+
+  C:0081H         LINE#         34
+  C:0083H         LINE#         35
+  C:0084H         LINE#         36
+  C:0086H         LINE#         38
+  C:0088H         LINE#         40
+  C:0092H         LINE#         41
+  -------         ENDPROC       _IRSENDHIGH
+  -------         PROC          _IRSENDBYTE6121
+  D:0004H         SYMBOL        n
+  -------         DO            
+  D:0003H         SYMBOL        i
+  -------         ENDDO         
+  C:0032H         LINE#         43
+  C:0034H         LINE#         44
+  C:0034H         LINE#         47
+  C:0036H         LINE#         48
+  C:0036H         LINE#         49
+  C:003DH         LINE#         50
+  C:0047H         LINE#         51
+  C:004EH         LINE#         52
+  C:0052H         LINE#         53
+  C:0054H         LINE#         54
+  -------         ENDPROC       _IRSENDBYTE6121
+  -------         PROC          _SEND_UPD6121
+  D:0001H         SYMBOL        syscode
+  D:0002H         SYMBOL        keydat
+  C:0003H         LINE#         56
+  C:0007H         LINE#         57
+  C:0007H         LINE#         58
+  C:000EH         LINE#         59
+  C:0015H         LINE#         60
+  C:001AH         LINE#         61
+  C:0020H         LINE#         62
+  C:0025H         LINE#         63
+  C:002BH         LINE#         64
+  -------         ENDPROC       _SEND_UPD6121
+  -------         ENDMOD        IR_SEND
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0090H         PUBLIC        P1
+  D:00B0H         PUBLIC        P3
+  D:00A8H         PUBLIC        IE
+  D:00B8H         PUBLIC        IP
+  C:009FH         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0088H         PUBLIC        TCON
+  D:00C8H         PUBLIC        T2CON
+  D:00D0H         PUBLIC        PSW
+  -------         PROC          MAIN
+  C:009FH         LINE#         3
+  C:009FH         LINE#         4
+  C:00A6H         LINE#         5
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+Program Size: data=9.0 xdata=0 code=171
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/30/2013  12:54:14  PAGE 4
+
+
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

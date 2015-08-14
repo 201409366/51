@@ -1,0 +1,35 @@
+C51 COMPILER V9.01   MAIN                                                                  10/28/2012 14:33:44 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN main.OBJ
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE main.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "timer.h"
+   2          
+   3          void h() {
+   4   1              P0 = ~P0;
+   5   1      }
+   6          
+   7          void main() {
+   8   1              timer.timer1.period = 10000;
+   9   1              timer.timer1.handler = h;
+  10   1              timer.timer1.init();
+  11   1              while(1);
+  12   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     28    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

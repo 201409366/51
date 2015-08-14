@@ -1,0 +1,110 @@
+C51 COMPILER V9.01   DS18B20                                                               08/30/2013 11:49:54 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN DS18B20.OBJ
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE DS18B20.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include <reg52.h>
+   2          #include "DS18B20.h"
+   3          #include <intrins.h>//这个东西里面有_nop_这个函数
+   4          
+   5          #define uchar unsigned char
+   6          
+   7          sbit DS18B20_DQ = P2^7;
+   8          
+   9          //--------------------------------DS18B20--------------------------
+  10          
+  11          void flash(uchar i) {
+  12   1              while(-- i);
+  13   1      }
+  14          
+  15          bit ResetDS18B20() {//返回0说明正常
+  16   1              DS18B20_DQ = 1;
+  17   1              DS18B20_DQ = 0;
+  18   1              flash(247);
+  19   1              DS18B20_DQ = 1;
+  20   1              flash(27);
+  21   1              if(DS18B20_DQ == 0) {
+  22   2                      while(DS18B20_DQ == 0);//等待DQ被拉高
+  23   2                      return 0;
+  24   2              }
+  25   1              return 1;
+  26   1              
+  27   1      }
+  28          
+  29          void writeDS18B20(uchar d) {
+  30   1              uchar i = 0;
+  31   1              for(i = 0; i < 8; i ++)
+  32   1                      {
+  33   2                              DS18B20_DQ = 1;
+  34   2                              DS18B20_DQ = 0;
+  35   2                              flash(5);                       
+  36   2                              DS18B20_DQ = d & 0x01;
+  37   2                              flash(20);
+  38   2                              DS18B20_DQ = 1;
+  39   2                              d >>= 1;
+  40   2                      }
+  41   1      }
+  42          
+  43          uchar readDS18B20 () {
+  44   1              uchar i = 0;   //就一个初始化的问题。。。困扰我这么久。。。。。fuck
+  45   1              uchar d = 0;
+  46   1              for(i = 0; i < 8; i ++) {
+  47   2                      DS18B20_DQ = 1;
+  48   2                      DS18B20_DQ = 0;
+  49   2                      flash(1);//7us
+  50   2                      DS18B20_DQ = 1;
+  51   2                      flash(1);
+  52   2                      if(DS18B20_DQ) {//读数据
+  53   3                              d |= 0x01 << i;
+  54   3                      }
+  55   2                      flash(17);//45us
+C51 COMPILER V9.01   DS18B20                                                               08/30/2013 11:49:54 PAGE 2   
+
+  56   2                      DS18B20_DQ = 1;
+  57   2                      _nop_();
+  58   2              }
+  59   1              return d;
+  60   1      }
+  61          
+  62          uchar getTemperatur () {
+  63   1              uchar tempL;
+  64   1              uchar tempH;
+  65   1              uchar temperature;//temperature
+  66   1              
+  67   1              ResetDS18B20(); //DS18B20复位
+  68   1              writeDS18B20(0xCC);     //跳过ROM 0xcc
+  69   1              writeDS18B20(0x44);     //开始温度转换
+  70   1              ResetDS18B20(); //DS18B20复位
+  71   1              writeDS18B20(0xCC);             //跳过ROM
+  72   1              writeDS18B20(0xBE);     //读取温度值.因为温度值在暂存器里面。所以我们读取暂存器里面的东西。
+  73   1              //因为发了读取指令过去，所以暂存器里面的东西会全部给我们发过来.根据它的结构，
+  74   1              //我们只要连续读两次
+  75   1              tempL = readDS18B20();  //先读低8位数据
+  76   1              tempH = readDS18B20();  //再读高8位数据
+  77   1              //合成温度数据.可以看存储结构图想到算法
+  78   1              
+  79   1              tempL >>= 4;
+  80   1              tempH <<= 4;
+  81   1              temperature = tempH | tempL;//得到整数部分
+  82   1              //温度显示
+  83   1      
+  84   1              return temperature;
+  85   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    158    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

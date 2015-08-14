@@ -1,0 +1,4 @@
+"main.obj",
+"Power.obj" 
+TO "Test" 
+RAMSIZE(256) 

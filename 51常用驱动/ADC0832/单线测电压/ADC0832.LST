@@ -1,0 +1,94 @@
+C51 COMPILER V9.01   ADC0832                                                               08/30/2013 11:27:56 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE ADC0832
+OBJECT MODULE PLACED IN ADC0832.OBJ
+COMPILER INVOKED BY: D:\keil\C51\BIN\C51.EXE ADC0832.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          #include "adc0832.h"
+   2          
+   3          #define uchar unsigned char
+   4          #define uint unsigned int
+   5          
+   6          sbit ADC0832CS = P1^4;
+   7          sbit ADC0832CLK = P1^5;
+   8          sbit ADC0832D0_D1 = P1^6;
+   9          
+  10          uchar ADC0832ReadInfo() {
+  11   1              uchar i = 0;
+  12   1              uchar Value1 = 0;
+  13   1              uchar Value2 = 0;
+  14   1              
+  15   1      
+  16   1              
+  17   1              ADC0832CS = 1;//关掉AD;
+  18   1              ADC0832CLK = 0;
+  19   1              ADC0832D0_D1 = 0;
+  20   1              
+  21   1              ADC0832CS = 0;//开启芯片
+  22   1              
+  23   1              ADC0832D0_D1 = 1;//开始位
+  24   1              ADC0832CLK = 0;
+  25   1              ADC0832CLK = 1;
+  26   1              
+  27   1              ADC0832D0_D1 = 1;//并分/单通首
+  28   1              ADC0832CLK =0;
+  29   1              ADC0832CLK = 1;
+  30   1              
+  31   1              ADC0832D0_D1 = 0;//通首选择位
+  32   1              ADC0832CLK = 0;
+  33   1              ADC0832CLK = 1;
+  34   1              
+  35   1              ADC0832D0_D1 = 1;//空闲位
+  36   1              ADC0832CLK = 0;
+  37   1              ADC0832CLK = 1;
+  38   1              
+  39   1              for(i = 0;i <8 ;i++)                    //读第一次数据
+  40   1              {
+  41   2                      ADC0832CLK = 1;
+  42   2                      ADC0832CLK = 0;
+  43   2                      if(ADC0832D0_D1)
+  44   2                      {
+  45   3                              Value1 |= 0x80 >> i;
+  46   3                      }
+  47   2              }
+  48   1              
+  49   1              for(i = 0; i < 8; i++)                  //读第二次数据
+  50   1              {
+  51   2                      if(ADC0832D0_D1)
+  52   2                      {
+  53   3                              Value2 |= 0x01 << i;
+  54   3                      }
+  55   2                      ADC0832CLK = 1;
+C51 COMPILER V9.01   ADC0832                                                               08/30/2013 11:27:56 PAGE 2   
+
+  56   2                      ADC0832CLK = 0;
+  57   2              }
+  58   1              
+  59   1              ADC0832CS = 1;                                  //关掉芯片
+  60   1              
+  61   1              if(Value1 == Value2)                    //数据校难
+  62   1              {
+  63   2                      return Value1;
+  64   2              }
+  65   1              else
+  66   1              {
+  67   2                      return 0;
+  68   2              }
+  69   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     97    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
